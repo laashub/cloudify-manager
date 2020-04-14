@@ -58,6 +58,12 @@ class CreatedAtMixin(object):
 
 class Blueprint(CreatedAtMixin, SQLResourceBase):
     __tablename__ = 'blueprints'
+    __table_args__ = (
+        db.Index(
+            'id', '_tenant_id',
+            unique=True
+        ),
+    )
 
     skipped_fields = dict(
         SQLResourceBase.skipped_fields,
@@ -73,6 +79,12 @@ class Blueprint(CreatedAtMixin, SQLResourceBase):
 
 class Snapshot(CreatedAtMixin, SQLResourceBase):
     __tablename__ = 'snapshots'
+    __table_args__ = (
+        db.Index(
+            'id', '_tenant_id',
+            unique=True
+        ),
+    )
 
     status = db.Column(db.Enum(*SnapshotState.STATES, name='snapshot_status'))
     error = db.Column(db.Text)
@@ -149,6 +161,12 @@ class Plugin(SQLResourceBase):
 
 class Secret(CreatedAtMixin, SQLResourceBase):
     __tablename__ = 'secrets'
+    __table_args__ = (
+        db.Index(
+            'id', '_tenant_id',
+            unique=True
+        ),
+    )
 
     value = db.Column(db.Text)
     updated_at = db.Column(UTCDateTime)
@@ -167,6 +185,12 @@ class Secret(CreatedAtMixin, SQLResourceBase):
 
 class Site(CreatedAtMixin, SQLResourceBase):
     __tablename__ = 'sites'
+    __table_args__ = (
+        db.Index(
+            'name', '_tenant_id',
+            unique=True
+        ),
+    )
 
     name = db.Column(db.Text, nullable=False)
     latitude = db.Column(db.Float, nullable=True)
@@ -199,6 +223,10 @@ class Deployment(CreatedAtMixin, SQLResourceBase):
         db.Index(
             'deployments__sife_fk_visibility_idx',
             '_blueprint_fk', '_site_fk', 'visibility', '_tenant_id'
+        ),
+        db.Index(
+            'id', '_tenant_id',
+            unique=True
         ),
     )
     skipped_fields = dict(
